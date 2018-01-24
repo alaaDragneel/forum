@@ -3,18 +3,18 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 
 class ReplyTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testExample()
+    use DatabaseMigrations;
+    
+    /** @test */
+    public function it_has_an_owner()
     {
-        $this->assertTrue(true);
+        $reply = factory('App\Reply')->create();
+
+        $this->assertInstanceOf('App\User', $reply->owner);
     }
 }

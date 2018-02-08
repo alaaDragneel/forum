@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
 {
-     public function __construct()
+
+    public function __construct ()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except([ 'index', 'show' ]);
     }
 
     /**
@@ -17,7 +18,7 @@ class ThreadsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index ()
     {
         $threads = Thread::latest()->get();
 
@@ -29,23 +30,30 @@ class ThreadsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create ()
     {
-        //
+        return view('threads.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store (Request $request)
     {
+        $this->validate($request, [
+            'title'      => 'required',
+            'body'       => 'required',
+            'channel_id' => 'required|exists:channel,id',
+        ]);
+
         $thread = Thread::create([
-            'title' => request('title'),
-            'body' => request('body'),
-            'user_id' => auth()->id()
+            'title'      => request('title'),
+            'body'       => request('body'),
+            'channel_id' => request('channel_id'),
+            'user_id'    => auth()->id(),
         ]);
 
         return redirect($thread->path());
@@ -54,10 +62,11 @@ class ThreadsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Thread  $thread
+     * @param $channelId
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function show(Thread $thread)
+    public function show ($channelId, Thread $thread)
     {
         return view('threads.show', compact('thread'));
     }
@@ -65,10 +74,10 @@ class ThreadsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function edit(Thread $thread)
+    public function edit (Thread $thread)
     {
         //
     }
@@ -76,11 +85,11 @@ class ThreadsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Thread  $thread
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Thread $thread)
+    public function update (Request $request, Thread $thread)
     {
         //
     }
@@ -88,10 +97,10 @@ class ThreadsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Thread $thread)
+    public function destroy (Thread $thread)
     {
         //
     }

@@ -8,8 +8,14 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    protected function signIn($user) 
+    /**
+     * @param null $user
+     * @return mixed
+     */
+    protected function signIn($user = null)
     {
-        $this->be($user);
+        $user = $user ?: create('App\User');
+        $this->actingAs($user);
+        return $this;
     }
 }

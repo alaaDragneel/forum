@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Channel' => $baseDir . '/app/Channel.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -3216,9 +3217,13 @@ return array(
     'Symfony\\Thanks\\Command\\ThanksCommand' => $vendorDir . '/symfony/thanks/src/Command/ThanksCommand.php',
     'Symfony\\Thanks\\Thanks' => $vendorDir . '/symfony/thanks/src/Thanks.php',
     'Tests\\CreatesApplication' => $baseDir . '/tests/CreatesApplication.php',
-    'Tests\\Feature\\ThreadsTest' => $baseDir . '/tests/Feature/ThreadsTest.php',
+    'Tests\\Feature\\CreateThreadTest' => $baseDir . '/tests/Feature/CreateThreadTest.php',
+    'Tests\\Feature\\ParticipateInForumTest' => $baseDir . '/tests/Feature/ParticipateInForumTest.php',
+    'Tests\\Feature\\ReadThreadsTest' => $baseDir . '/tests/Feature/ReadThreadsTest.php',
     'Tests\\TestCase' => $baseDir . '/tests/TestCase.php',
     'Tests\\Unit\\ExampleTest' => $baseDir . '/tests/Unit/ExampleTest.php',
+    'Tests\\Unit\\ReplyTest' => $baseDir . '/tests/Unit/ReplyTest.php',
+    'Tests\\Unit\\ThreadTest' => $baseDir . '/tests/Unit/ThreadTest.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'TheSeer\\Tokenizer\\Exception' => $vendorDir . '/theseer/tokenizer/src/Exception.php',
     'TheSeer\\Tokenizer\\NamespaceUri' => $vendorDir . '/theseer/tokenizer/src/NamespaceUri.php',

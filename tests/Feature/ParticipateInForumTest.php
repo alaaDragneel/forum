@@ -14,7 +14,7 @@ class ParticipateInForumTest extends TestCase
     {
         $this->expectException('Illuminate\Auth\AuthenticationException');
         
-        $this->post('/threads/1/replies', []);
+        $this->post('/threads/some-channel/1/replies', []);
     }
     /** @test */
     public function an_authenticated_user_may_participate_in_forum_threads() 
@@ -23,10 +23,10 @@ class ParticipateInForumTest extends TestCase
         $this->signIn($user = factory('App\User')->create());
 
         // And an Existing thread
-        $thread = factory('App\Thread')->create();
+        $thread = create('App\Thread');
         
         // When User Adds a Reply to thread
-        $reply = factory('App\Reply')->make();
+        $reply = make('App\Reply');
         $this->post('threads/' . $thread->id . '/replies', $reply->toArray()); 
 
         // Then Thier Reply Should be Visible On The Page

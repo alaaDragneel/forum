@@ -17,7 +17,7 @@ class FavoriteTest extends TestCase
 
     }
     /** @test */
-    public function an_authinticated_user_can_favorite_any_reply ()
+    public function an_authinticated_user_can_favorite_any_reply()
     {
         $this->signIn();
         $reply = create('App\Reply');

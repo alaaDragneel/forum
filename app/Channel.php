@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Channel extends Model
 {
 
+    /**
+     * Get The Route key Name For Laravel
+     * @return string
+     */
     public function getRouteKeyName ()
     {
         return 'slug';

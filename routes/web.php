@@ -24,7 +24,10 @@ Route::get('threads', 'ThreadsController@index')->name('threads.index');
 Route::get('threads/create', 'ThreadsController@create')->name('threads.create');
 Route::post('threads', 'ThreadsController@store')->name('threads.store');
 Route::get('threads/{channel}/{thread}', 'ThreadsController@show')->name('threads.show');
+Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy')->name('threads.destroy');
 Route::get('threads/{channel}', 'ThreadsController@index')->name('threads.channels'); // must be down here
 // replies Routes
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
 Route::post('replies/{reply}/favorites', 'FavoriteController@store')->name('favorites.replies.store');
+// users routes
+Route::get('profiles/{profileUser}', 'ProfilesController@show')->name('profiles.show');

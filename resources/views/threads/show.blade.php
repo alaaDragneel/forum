@@ -7,8 +7,19 @@
                 {{-- Main Thread Section::start--}}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <a href="#"> {{ $thread->owner->name }} </a> Posted:
-                        {{ $thread->title }}
+                        <div class="level">
+                            <span class="flex">
+                                <a href="{{ route('profiles.show', ['profileUser' => $thread->owner]) }}"> {{ $thread->owner->name }} </a> Posted:
+                                {{ $thread->title }}
+                            </span>
+                            @if(auth()->check())
+                                <form action="{{ $thread->path() }}" method="POST">
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
+                                    <button type="submit" class="btn btn-link btn-sm">Delete Thread</button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                     <div class="panel-body">
                         {{ $thread->body }}
@@ -44,7 +55,7 @@
                     <div class="panel-body">
                         <p>
                             This thread was published {{ $thread->created_at->diffForHumans() }}
-                            by <a href="#">{{ $thread->owner->name }}</a>,
+                            by  <a href="{{ route('profiles.show', ['profileUser' => $thread->owner]) }}">{{ $thread->owner->name }}</a>,
                             and currently has {{ $thread->replies_count }} {{ str_plural('comment', $thread->replies_count) }}.
                         </p>
                     </div>

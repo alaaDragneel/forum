@@ -4,26 +4,23 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                @foreach ($threads as $thread)
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="level">
-                                <h4 class="flex">
-                                    <a href="{{ $thread->path() }}">
-                                        {{ $thread->title }}
-                                    </a>
-                                </h4>
+                @forelse($threads as $thread)
+                    @component('profiles.activities.activity')
+                        @slot('heading')
+                            <a href="{{ $thread->path() }}">
+                                {{ $thread->title }}
+                            </a>
+                        @endslot
+                        @slot('option')
                                 <a href="{{ $thread->path() }}" class="badge">{{ $thread->replies_count }} {{ str_plural('Reply', $thread->replies_count) }} </a>
-                            </div>
-                        </div>
-
-                        <div class="panel-body">
-                            <div class="body">
+                        @endslot
+                        @slot('body')
                                 {{ $thread->body }}
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+                        @endslot
+                    @endcomponent
+                @empty
+                    <div class="alert alert-info text-center">No Threads Founds.</div>
+                @endforelse
             </div>
         </div>
     </div>

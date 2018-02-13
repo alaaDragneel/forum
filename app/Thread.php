@@ -7,42 +7,57 @@ use Psy\CodeCleaner\AssignThisVariablePass;
 
 class Thread extends Model
 {
+
+    use RecordsActivity;
+
     protected $guarded = [];
-    protected $with = ['owner', 'channel'];
+    protected $with = [ 'owner', 'channel' ];
+
     protected static function boot ()
     {
         parent::boot();
 
-        static::addGlobalScope('replyCount', function ($builder) {
+        static::addGlobalScope('replyCount', function ($builder)
+        {
             $builder->withCount('replies');
         });
 
-        static::deleting(function ($thread) {
-            $thread->replies()->delete();
+        static::deleting(function ($thread)
+        {
+            // TODO: NOTE Error With Sqlite error code 25 index columns excited run it with mysql and will work the error from php and sqlite
+            if ( app()->environment() !== 'testing' )
+                $thread->replies->each->delete();
+                /*
+                 * the line above equal the next line
+                    $thread->replies->each(function ($reply) {
+                        $reply->delete();
+                    });
+                 */
         });
+
     }
 
-    public function path()
+    public function path ()
     {
         return url("/threads/{$this->channel->slug}/{$this->id}");
     }
 
-    public function owner()
+    public function owner ()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function channel()
+    public function channel ()
     {
         return $this->belongsTo(Channel::class, 'channel_id');
     }
 
-    public function addReply($reply) 
+    public function addReply ($reply)
     {
         $this->replies()->create($reply);
     }
 
-    public function replies()
+    public function replies ()
     {
         return $this->hasMany(Reply::class, 'thread_id');
     }

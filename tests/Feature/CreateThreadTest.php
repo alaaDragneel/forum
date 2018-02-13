@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -13,12 +14,11 @@ class CreateThreadTest extends TestCase
     /** @test */
     public function guests_may_not_create_threads ()
     {
-        $this->expectException('Illuminate\Auth\AuthenticationException');
+        $this->withExceptionHandling();
         $this->get('/threads/create')
             ->assertRedirect('/login');
 
-        $this->post('/threads')
-            ->assertRedirect('/login');
+        $this->post('/threads')->assertRedirect('/login');
     }
 
     /** @test */
@@ -40,36 +40,35 @@ class CreateThreadTest extends TestCase
 
 
     /** @test */
-    public function guests_cannot_delete_threads()
+    public function unauthorized_users_cannot_delete_threads()
     {
-        $this->expectException('Illuminate\Auth\AuthenticationException');
-
+        // NOTE: Not Signed In
+        $this->withExceptionHandling();
         $thread = create('App\Thread');
+        $this->delete($thread->path())->assertRedirect('/login');
 
-        $this->delete($thread->path())
-        ->assertRedirect('/login');
+        // NOTE: signed In
+        $this->signIn();
+        $this->delete($thread->path())->assertStatus(403);
 
     }
 
     /** @test */
-    public function a_thread_can_be_deleted ()
+    public function authorized_users_can_delete_threads()
     {
         // TODO: NOTE Error With Sqlite error code 25 index columns excited run it with mysql and will work the error from php and sqlite
-//        $this->signIn();
-//
-//        $thread = create('App\Thread');
-//        $reply = create('App\Reply', [ 'thread_id' => $thread->id ]);
-//        $response = $this->json('DELETE', $thread->path());
-//
-//        $response->assertStatus(204);
-//
-//        $this->assertDatabaseMissing('threads', [ 'id' => $thread->id ]);
-//        $this->assertDatabaseMissing('replies', [ 'id' => $reply->id ]);
-    }
+        $this->signIn();
 
-    /** @test */
-    public function threads_may_only_be_deleted_by_who_have_permissions ()
-    {
-        // TODO
+
+        $thread = create('App\Thread', ['user_id' => auth()->id()]);
+        $reply = create('App\Reply', [ 'thread_id' => $thread->id ]);
+        $response = $this->json('DELETE', $thread->path());
+
+        $response->assertStatus(204);
+
+        $this->assertDatabaseMissing('threads', [ 'id' => $thread->id ]);
+//         $this->assertDatabaseMissing('replies', [ 'id' => $reply->id ]); // Leave it before testing error with the sqlite3
+//        $this->assertEquals(0, Activity::count()); // uncomment when uncomment the reply
+
     }
 }

@@ -5,26 +5,27 @@
         <div class="row">
             <div class="col-md-8">
                 {{-- Main Thread Section::start--}}
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="level">
-                            <span class="flex">
-                                <a href="{{ route('profiles.show', ['profileUser' => $thread->owner]) }}"> {{ $thread->owner->name }} </a> Posted:
-                                {{ $thread->title }}
-                            </span>
-                            @if(auth()->check())
-                                <form action="{{ $thread->path() }}" method="POST">
-                                    {{ csrf_field() }}
-                                    {{ method_field('DELETE') }}
-                                    <button type="submit" class="btn btn-link btn-sm">Delete Thread</button>
-                                </form>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="panel-body">
+                @component('profiles.activities.activity')
+                    @slot('heading')
+                        <a href="{{ route('profiles.show', ['profileUser' => $thread->owner]) }}">
+                            {{ $thread->owner->name }}
+                        </a>
+                        Posted:
+                        {{ $thread->title }}
+                    @endslot
+                    @slot('option')
+                        @can('update', $thread)
+                            <form action="{{ $thread->path() }}" method="POST">
+                                {{ csrf_field() }}
+                                {{ method_field('DELETE') }}
+                                <button type="submit" class="btn btn-link btn-sm">Delete Thread</button>
+                            </form>
+                        @endcan
+                    @endslot
+                    @slot('body')
                         {{ $thread->body }}
-                    </div>
-                </div>
+                    @endslot
+                @endcomponent
                 {{-- Main Thread Section::end--}}
 
                 {{-- Reply Section::start --}}
@@ -55,11 +56,14 @@
                     <div class="panel-body">
                         <p>
                             This thread was published {{ $thread->created_at->diffForHumans() }}
-                            by  <a href="{{ route('profiles.show', ['profileUser' => $thread->owner]) }}">{{ $thread->owner->name }}</a>,
-                            and currently has {{ $thread->replies_count }} {{ str_plural('comment', $thread->replies_count) }}.
+                            by
+                            <a href="{{ route('profiles.show', ['profileUser' => $thread->owner]) }}">{{ $thread->owner->name }}</a>,
+                            and currently
+                            has {{ $thread->replies_count }} {{ str_plural('comment', $thread->replies_count) }}.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 @endsection

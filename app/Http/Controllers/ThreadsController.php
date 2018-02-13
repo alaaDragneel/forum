@@ -27,7 +27,7 @@ class ThreadsController extends Controller
     {
         $threads = $this->getThreads($channel, $filters);
 
-        if (request()->wantsJson()) { // for the test don't remove it
+        if ( request()->wantsJson() ) { // for the test don't remove it
             return $threads;
         }
 
@@ -65,7 +65,7 @@ class ThreadsController extends Controller
             'user_id'    => auth()->id(),
         ]);
 
-        return redirect($thread->path());
+        return redirect($thread->path())->with('flash', 'Your Thread Has Been Published');
     }
 
     /**
@@ -115,12 +115,15 @@ class ThreadsController extends Controller
      */
     public function destroy ($channel, Thread $thread)
     {
+        $this->authorize('update', $thread);
+
         $thread->delete();
-        if (request()->wantsJson()) { // for test don't remove
+
+        if ( request()->wantsJson() ) { // for test don't remove
             return response([], 204);
         }
 
-        return redirect('/threads');
+        return redirect('/threads')->with('flash', 'Your Thread Deleted Was Successfully');
     }
 
     /**

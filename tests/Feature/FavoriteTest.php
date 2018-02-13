@@ -12,7 +12,7 @@ class FavoriteTest extends TestCase
     /** @test */
     public function guests_cannot_favorite_any_things ()
     {
-        $this->expectException('Illuminate\Auth\AuthenticationException');
+        $this->withExceptionHandling();
         $this->post('replies/1/favorites')->assertRedirect('/login');
 
     }

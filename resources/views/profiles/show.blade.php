@@ -15,7 +15,9 @@
                         {{ \Carbon\Carbon::parse($date)->toFormattedDateString() }}
                     </h3>
                     @foreach($activityItems as $activity)
-                        @include("profiles.activities.{$activity->type}")
+                        @if (view()->exists("profiles.activities.{$activity->type}"))
+                            @include("profiles.activities.{$activity->type}")
+                        @endif
                     @endforeach
                 @endforeach
                 {{--{{ $activities->links() }}--}}

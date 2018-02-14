@@ -67,3 +67,15 @@
         </div>
     </div>
 @endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            // highlight the selected favorite
+            if (window.location.hash != '') {
+                var hash = window.location.hash.replace(/#/g, '');
+                $('#' + hash).toggleClass('panel-success');
+            }
+        });
+    </script>
+@endsection

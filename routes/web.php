@@ -29,5 +29,6 @@ Route::get('threads/{channel}', 'ThreadsController@index')->name('threads.channe
 // replies Routes
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
 Route::post('replies/{reply}/favorites', 'FavoriteController@store')->name('favorites.replies.store');
+Route::delete('replies/{reply}', 'RepliesController@destroy')->name('replies.destroy');
 // users routes
 Route::get('profiles/{profileUser}', 'ProfilesController@show')->name('profiles.show');

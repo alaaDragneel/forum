@@ -10,7 +10,7 @@
                         <small>Since {{ $profileUser->created_at->diffForHumans() }}</small>
                     </h1>
                 </div>
-                @foreach($activities as $date => $activityItems)
+                @forelse($activities as $date => $activityItems)
                     <h3 class="page-header">
                         {{ \Carbon\Carbon::parse($date)->toFormattedDateString() }}
                     </h3>
@@ -19,7 +19,9 @@
                             @include("profiles.activities.{$activity->type}")
                         @endif
                     @endforeach
-                @endforeach
+                @empty
+                    <p>There Is Now Activity For This User Yet.</p>
+                @endforelse
                 {{--{{ $activities->links() }}--}}
 
             </div>

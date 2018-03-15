@@ -10,7 +10,8 @@ class Reply extends Model
 
     protected $guarded = [];
     protected $with = ['owner', 'favorites'];
-    protected $withCount = ['favorites'];
+    // protected $withCount = ['favorites'];
+    protected $appends = ['favoritesCount', 'isFavorited'];
 
     public function owner()
     {

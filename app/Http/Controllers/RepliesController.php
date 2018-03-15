@@ -23,12 +23,25 @@ class RepliesController extends Controller
     {
         $this->validate(request(), [ 'body' => 'required' ]);
 
-        $thread->addReply([
+        $reply = $thread->addReply([
             'body'    => request('body'),
             'user_id' => auth()->id(),
         ]);
+        
+        if (request()->expectsJson()) {
+            return $reply->load('owner');
+        }
 
         return back()->with('flash', 'Your Reply Has Been Left');
+    }
+
+    public function update(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+
+        // $reply->update(['body' => request('body')]); two way works
+        $reply->update(request(['body']));
+        
     }
 
     public function destroy (Reply $reply)
@@ -37,7 +50,12 @@ class RepliesController extends Controller
 
         $reply->delete();
 
+        if (request()->expectsJson()) {
+            return response(['status' => 'Reply Deleted Successfully']);
+        }
+
         return back()->with('flash', 'Reply Deleted Successfully');
     }
+
 
 }

@@ -18,8 +18,11 @@ class FavoriteController extends Controller
     public function store (Reply $reply)
     {
         $reply->favorite();
-
-        return back()->with('flash', 'You Favorite Reply Successfully');
+        // return back()->with('flash', 'You Favorite Reply Successfully');
     }
 
+    public function destroy(Reply $reply)
+    {
+        $reply->unFavorite();
+    }
 }

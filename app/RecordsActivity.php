@@ -10,13 +10,13 @@ trait RecordsActivity
     {
         if (auth()->guest()) return; // To Avoid Test Errors
 
+        // all this lines work on model scope loke Favorite()->delete() see how we fix it in unfavorite method in favoritable trait
         foreach ( static::getActivitiesToRecords() as $event ) {
             static::$event(function ($model) use ($event)
             {
                 $model->recordActivity($event);
             });
         }
-
         static::deleting(function ($model) {
             $model->activities()->delete();
         });

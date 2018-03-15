@@ -8,22 +8,23 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ParticipateInForumTest extends TestCase
 {
     use DatabaseMigrations;
-    
+
     /** @test */
-    public function unauthenticated_user_may_not_add_reply() 
+    public function unauthenticated_user_may_not_add_reply()
     {
         $this->withExceptionHandling();
         $this->post('/threads/some-channel/1/replies', [])->assertRedirect('/login');
     }
+
     /** @test */
-    public function an_authenticated_user_may_participate_in_forum_threads() 
+    public function an_authenticated_user_may_participate_in_forum_threads()
     {
         // Given we have a authenticated user
         $this->signIn();
 
         // And an Existing thread
         $thread = create('App\Thread');
-        
+
         // When User Adds a Reply to thread
         $reply = make('App\Reply');
         $this->post($thread->path() . '/replies', $reply->toArray());
@@ -34,7 +35,7 @@ class ParticipateInForumTest extends TestCase
     }
 
     /** @test */
-    public function unauthorized_users_cannot_delete_replies ()
+    public function unauthorized_users_cannot_delete_replies()
     {
         $this->withExceptionHandling();
         $reply = create('App\Reply');
@@ -42,16 +43,35 @@ class ParticipateInForumTest extends TestCase
 
         $this->signIn();
         $this->delete("/replies/{$reply->id}")->assertStatus(403);
-
     }
 
     /** test NOTE add @ before test to run it because there is error in sqlite3 */
-    public function authorized_users_can_delete_replies ()
+    public function authorized_users_can_delete_replies()
     {
         $this->signIn();
         $reply = create('App\Reply', ['user_id' => auth()->id()]);
         $this->delete("/replies/{$reply->id}")->assertStatus(302);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+    }
 
+    /** @test */
+    public function unauthorized_users_cannot_update_replies()
+    {
+        $this->withExceptionHandling();
+        $reply = create('App\Reply');
+        $this->patch("/replies/{$reply->id}")->assertRedirect('/login');
+
+        $this->signIn();
+        $this->patch("/replies/{$reply->id}")->assertStatus(403);
+    }
+
+    /** @test */
+    public function authorized_users_can_update_replies()
+    {
+        $this->signIn();
+        $reply = create('App\Reply', ['user_id' => auth()->id()]);
+        $updatedReply = 'You Been Changed, Fool.';
+        $this->patch("/replies/{$reply->id}", ['body' => $updatedReply]);
+        $this->assertDatabaseHas('replies', ['id' => $reply->id, 'body' => $updatedReply]);
     }
 }

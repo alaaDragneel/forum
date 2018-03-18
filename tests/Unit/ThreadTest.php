@@ -11,20 +11,19 @@ class ThreadTest extends TestCase
 
     protected $thread;
 
-    public function setUp() 
+    public function setUp()
     {
         parent::setUp();
         $this->thread = create('App\Thread');
     }
 
     /** @test */
-    public function a_thread_can_make_a_path ()
+    public function a_thread_can_make_a_path()
     {
         $thread = create('App\Thread');
         $path = url("/threads/{$thread->channel->slug}/{$thread->id}");
         $this->assertEquals($path, $thread->path());
     }
-
 
     /** @test */
     public function a_thread_has_creator()
@@ -42,10 +41,10 @@ class ThreadTest extends TestCase
     public function a_thread_can_add_a_reply()
     {
         $this->thread->addReply([
-            'body'      => 'FooBar',
-            'user_id'   => 1
+            'body' => 'FooBar',
+            'user_id' => 1
         ]);
-    
+
         $this->assertCount(1, $this->thread->replies);
     }
 
@@ -55,5 +54,21 @@ class ThreadTest extends TestCase
         $thread = create('App\Thread');
 
         $this->assertInstanceOf('App\Channel', $thread->channel);
+    }
+
+    /** @test */
+    public function a_thread_can_be_subscribed_to()
+    {
+        // Given We Have A Thread
+        $thread = create('App\Thread');
+
+        // And An Authinticated User
+        $this->signIn();
+
+        // When The User subscribe To The Thread
+        $thread->subscribe();
+    
+        // Then We Should Be Able To Fetch All Threads That The User Has Subscribed To.
+        $thread->subscriptions()->where('user_id', auth()->id())->get();
     }
 }

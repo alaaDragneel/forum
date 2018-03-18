@@ -28,11 +28,11 @@
 <script>
 
 export default {
-    props: ['endpoint'],
     data () { 
         return {
             body: '',
             disabled: false,
+            endpoint: location.pathname + "/replies"
         };
     },
     computed: {

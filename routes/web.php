@@ -27,6 +27,7 @@ Route::get('threads/{channel}/{thread}', 'ThreadsController@show')->name('thread
 Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy')->name('threads.destroy');
 Route::get('threads/{channel}', 'ThreadsController@index')->name('threads.channels'); // must be down here
 // replies Routes
+Route::get('/threads/{channel}/{thread}/replies', 'RepliesController@index');
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
 Route::post('replies/{reply}/favorites', 'FavoriteController@store')->name('favorites.replies.store');
 Route::delete('replies/{reply}/favorites', 'FavoriteController@destroy')->name('favorites.replies.destroy');

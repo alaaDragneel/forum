@@ -16,11 +16,11 @@ class Thread extends Model
     protected static function boot ()
     {
         parent::boot();
-
-        static::addGlobalScope('replyCount', function ($builder)
-        {
-            $builder->withCount('replies');
-        });
+        // no need for the next line becuase we add replies_count manually
+        // static::addGlobalScope('replyCount', function ($builder)
+        // {
+        //     $builder->withCount('replies');
+        // });
 
         static::deleting(function ($thread)
         {

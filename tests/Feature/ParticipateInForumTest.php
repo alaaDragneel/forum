@@ -29,9 +29,9 @@ class ParticipateInForumTest extends TestCase
         $reply = make('App\Reply');
         $this->post($thread->path() . '/replies', $reply->toArray());
 
-        // Then Thier Reply Should be Visible On The Page
-        $this->get($thread->path())
-            ->assertSee($reply->body);
+        $this->assertDatabaseHas('replies', ['body' => $reply->body]);
+        // fresh() => will get fereh data from the database
+        $this->assertEquals(1, $thread->fresh()->replies_count);
     }
 
     /** @test */
@@ -45,13 +45,14 @@ class ParticipateInForumTest extends TestCase
         $this->delete("/replies/{$reply->id}")->assertStatus(403);
     }
 
-    /** test NOTE add @ before test to run it because there is error in sqlite3 */
+    /** @test NOTE add @ before test to run it because there is error in sqlite3 */
     public function authorized_users_can_delete_replies()
     {
         $this->signIn();
         $reply = create('App\Reply', ['user_id' => auth()->id()]);
         $this->delete("/replies/{$reply->id}")->assertStatus(302);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+        $this->assertEquals(0, $reply->thread->fresh()->replies_count);
     }
 
     /** @test */

@@ -29,7 +29,7 @@
                     @endcomponent
                     {{-- Main Thread Section::end--}}
 
-                    <replies :data="{{ $thread->replies }}" @add-reply="repliesCount++" @remove-reply="repliesCount--"></replies>
+                    <replies @added="repliesCount++" @removed="repliesCount--"></replies>
                 </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">

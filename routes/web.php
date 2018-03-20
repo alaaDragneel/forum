@@ -26,6 +26,9 @@ Route::post('threads', 'ThreadsController@store')->name('threads.store');
 Route::get('threads/{channel}/{thread}', 'ThreadsController@show')->name('threads.show');
 Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy')->name('threads.destroy');
 Route::get('threads/{channel}', 'ThreadsController@index')->name('threads.channels'); // must be down here
+Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@store')->middleware('auth');
+Route::delete('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@destroy')->middleware('auth');
+
 // replies Routes
 Route::get('/threads/{channel}/{thread}/replies', 'RepliesController@index');
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
@@ -35,3 +38,5 @@ Route::patch('replies/{reply}', 'RepliesController@update')->name('replies.updat
 Route::delete('replies/{reply}', 'RepliesController@destroy')->name('replies.destroy');
 // users routes
 Route::get('profiles/{profileUser}', 'ProfilesController@show')->name('profiles.show');
+Route::get('profiles/{user}/notifications', 'UserNotificationsController@index');
+Route::delete('profiles/{user}/notifications/{notification}', 'UserNotificationsController@destroy');

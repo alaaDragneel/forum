@@ -8,14 +8,22 @@
                     @component('profiles.activities.activity')
                         @slot('heading')
                             <a href="{{ $thread->path() }}">
-                                {{ $thread->title }}
+                                @if(auth()->check() && $thread->hasUpdatesFor(auth()->user()))
+                                    <strong>
+                                        {{ $thread->title }}
+                                    </strong>
+                                @else
+                                    {{ $thread->title }}
+                                @endif
                             </a>
                         @endslot
                         @slot('option')
-                                <a href="{{ $thread->path() }}" class="badge">{{ $thread->replies_count }} {{ str_plural('Reply', $thread->replies_count) }} </a>
+                            <a href="{{ $thread->path() }}" class="badge">
+                                {{ $thread->replies_count }} {{ str_plural('Reply', $thread->replies_count) }}
+                            </a>
                         @endslot
                         @slot('body')
-                                {{ $thread->body }}
+                            {{ $thread->body }}
                         @endslot
                     @endcomponent
                 @empty

@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Notifications\ThreadWasUpdated;
 use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
@@ -68,15 +67,7 @@ class Thread extends Model
     {
         $newReply = $this->replies()->create($reply);
 
-        // prepare Notifications For All Subscribers
-        $this->subscriptions->filter(function ($sub) use ($newReply) {
-            return $sub->user_id != $newReply->user_id;
-        })
-        ->each->notify($newReply);
-//        ->each(function ($sub) use ($this, $newReply) {
-//            $sub->notify(new ThreadWasUpdated($this, $newReply));
-//        });
-
+        $this->notifySubscribers($newReply);
 
         return $newReply;
     }
@@ -84,6 +75,14 @@ class Thread extends Model
     public function replies ()
     {
         return $this->hasMany(Reply::class, 'thread_id');
+    }
+
+    public function notifySubscribers ($reply)
+    {
+        $this->subscriptions
+            ->where('user_id', '!=', $reply->user_id)
+            ->each
+            ->notify($reply);
     }
 
     public function scopeFilter ($query, $filters)
@@ -100,6 +99,11 @@ class Thread extends Model
         return $this;
     }
 
+    public function subscriptions ()
+    {
+        return $this->hasMany(ThreadSubscription::class);
+    }
+
     public function unsubscribe ($userId = null)
     {
         $this->subscriptions()
@@ -107,14 +111,16 @@ class Thread extends Model
             ->delete();
     }
 
-    public function subscriptions ()
-    {
-        return $this->hasMany(ThreadSubscription::class);
-    }
-
     public function getIsSubscribedToAttribute ()
     {
         return $this->subscriptions()->where('user_id', auth()->id())->exists();
+    }
+
+    public function hasUpdatesFor ($user)
+    {
+        $key = $user->visitedThreadCacheKey($this);
+
+        return $this->updated_at > cache($key);
     }
 
 }

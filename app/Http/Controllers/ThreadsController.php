@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Thread;
-use App\User;
 use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
@@ -32,6 +31,22 @@ class ThreadsController extends Controller
         }
 
         return view('threads.index', compact('threads'));
+    }
+
+    /**
+     * @param Channel $channel
+     * @param ThreadFilters $filters
+     * @return mixed
+     */
+    protected function getThreads (Channel $channel, ThreadFilters $filters)
+    {
+        $threads = Thread::latest()->filter($filters);
+
+        if ( $channel->exists ) $threads->where('channel_id', $channel->id);
+
+        $threads = $threads->get();
+
+        return $threads;
     }
 
     /**
@@ -78,6 +93,10 @@ class ThreadsController extends Controller
      */
     public function show ($channel, Thread $thread)
     {
+        if ( auth()->check() ) {
+            auth()->user()->read($thread);
+        }
+
         return view('threads.show', compact('thread'));
     }
 
@@ -121,21 +140,5 @@ class ThreadsController extends Controller
         }
 
         return redirect('/threads')->with('flash', 'Your Thread Deleted Was Successfully');
-    }
-
-    /**
-     * @param Channel $channel
-     * @param ThreadFilters $filters
-     * @return mixed
-     */
-    protected function getThreads (Channel $channel, ThreadFilters $filters)
-    {
-        $threads = Thread::latest()->filter($filters);
-
-        if ( $channel->exists ) $threads->where('channel_id', $channel->id);
-
-        $threads = $threads->get();
-
-        return $threads;
     }
 }

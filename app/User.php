@@ -2,11 +2,12 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
     use Notifiable;
 
     /**
@@ -24,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'email'
+        'password', 'remember_token', 'email',
     ];
 
 
@@ -37,7 +38,7 @@ class User extends Authenticatable
         return 'name';
     }
 
-    public function threads()
+    public function threads ()
     {
         return $this->hasMany(Thread::class, 'user_id')->latest();
     }
@@ -45,6 +46,20 @@ class User extends Authenticatable
     public function activities ()
     {
         return $this->hasMany(Activity::class, 'user_id');
+    }
+
+    public function read ($thread)
+    {
+        // Simulate that The User Visited The Thread
+        cache()->forever(
+            $this->visitedThreadCacheKey($thread),
+            now()
+        );
+    }
+
+    public function visitedThreadCacheKey ($thread)
+    {
+        return sprintf("users.%s.visits,%s", $this->id, $thread->id);
     }
 
 }

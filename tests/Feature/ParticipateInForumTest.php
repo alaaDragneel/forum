@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ParticipateInForumTest extends TestCase
 {
@@ -74,5 +74,26 @@ class ParticipateInForumTest extends TestCase
         $updatedReply = 'You Been Changed, Fool.';
         $this->patch("/replies/{$reply->id}", ['body' => $updatedReply]);
         $this->assertDatabaseHas('replies', ['id' => $reply->id, 'body' => $updatedReply]);
+    }
+
+    /** @test */
+    public function replies_that_contains_spam_may_not_be_created ()
+    {
+        // Given we have a authenticated user
+        $this->signIn();
+
+        // And an Existing thread
+        $thread = create('App\Thread');
+
+        // When User Adds a Reply to thread
+        $reply = make('App\Reply', [
+            'body' => 'Yahoo Customer Support',
+        ]);
+
+        $this->expectException(\Exception::class);
+
+        $this->post($thread->path() . '/replies', $reply->toArray());
+
+
     }
 }

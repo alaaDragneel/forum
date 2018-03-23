@@ -41,9 +41,11 @@
                                 <button class="btn btn-success">Publish</button>
                             </div>
                             @if(count($errors))
-                                <ul class="alert alert-danger">
+                                <ul class="alert alert-danger list-unstyled">
                                     @foreach($errors->all() as $error)
-                                        {{ $error }}
+                                        <li>
+                                            {{ $error }}
+                                        </li>
                                     @endforeach
                                 </ul>
                             @endif

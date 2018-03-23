@@ -79,6 +79,8 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function replies_that_contains_spam_may_not_be_created ()
     {
+        $this->withExceptionHandling();
+
         // Given we have a authenticated user
         $this->signIn();
 
@@ -90,10 +92,30 @@ class ParticipateInForumTest extends TestCase
             'body' => 'Yahoo Customer Support',
         ]);
 
-        $this->expectException(\Exception::class);
+        $this->json('post', $thread->path() . '/replies', $reply->toArray())
+            ->assertStatus(422);
+    }
 
-        $this->post($thread->path() . '/replies', $reply->toArray());
+    /** @test */
+    public function users_may_only_reply_a_maximum_of_once_per_minute ()
+    {
+        $this->withExceptionHandling();
 
+        // Given we have a authenticated user
+        $this->signIn();
 
+        // And an Existing thread
+        $thread = create('App\Thread');
+
+        // When User Adds a Reply to thread
+        $reply = make('App\Reply', [
+            'body' => 'My Simple Reply',
+        ]);
+
+        $this->post($thread->path() . '/replies', $reply->toArray())
+            ->assertStatus(200);
+
+        $this->post($thread->path() . '/replies', $reply->toArray())
+            ->assertStatus(429);
     }
 }

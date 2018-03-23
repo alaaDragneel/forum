@@ -76,18 +76,18 @@ return [
     'required_without'     => 'The :attribute field is required when :values is not present.',
     'required_without_all' => 'The :attribute field is required when none of :values are present.',
     'same'                 => 'The :attribute and :other must match.',
-    'size'                 => [
+    'size'     => [
         'numeric' => 'The :attribute must be :size.',
         'file'    => 'The :attribute must be :size kilobytes.',
         'string'  => 'The :attribute must be :size characters.',
         'array'   => 'The :attribute must contain :size items.',
     ],
-    'string'               => 'The :attribute must be a string.',
-    'timezone'             => 'The :attribute must be a valid zone.',
-    'unique'               => 'The :attribute has already been taken.',
-    'uploaded'             => 'The :attribute failed to upload.',
-    'url'                  => 'The :attribute format is invalid.',
-
+    'string'   => 'The :attribute must be a string.',
+    'timezone' => 'The :attribute must be a valid zone.',
+    'unique'   => 'The :attribute has already been taken.',
+    'uploaded' => 'The :attribute failed to upload.',
+    'url'      => 'The :attribute format is invalid.',
+    'spamfree' => 'The :attribute Contains Spam',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

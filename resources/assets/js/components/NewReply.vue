@@ -52,6 +52,10 @@ export default {
                     this.body = '';
                     flash('Your Reply Has Been Left!');
                     this.$emit('reply-created', data);
+                })
+                .catch(error => {
+                    this.disabled = false;
+                    flash(error.response.data, 'danger');
                 });
         },
     }

@@ -22,7 +22,7 @@ class KeyHeldDown implements Spam
         */
 
         if ( preg_match('/(.)\\1{4,}/', $body) ) {
-            throw new Exception('Your Reply Contains SpamManger');
+            throw new Exception('Your Reply Contains Spam');
         }
     }
 }

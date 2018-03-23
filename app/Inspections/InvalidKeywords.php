@@ -20,7 +20,7 @@ class InvalidKeywords implements Spam
 
         foreach ( $this->keywords as $keyword ) {
             if ( stripos($body, $keyword) !== false ) { // For Case sensitive
-                throw new Exception('Your Reply Contains SpamManger');
+                throw new Exception('Your Reply Contains Spam');
             }
         }
     }

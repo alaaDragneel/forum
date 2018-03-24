@@ -9,11 +9,19 @@ use App\Thread;
 class RepliesController extends Controller
 {
 
+    /**
+     * RepliesController constructor.
+     */
     public function __construct ()
     {
         $this->middleware('auth', [ 'except' => 'index' ]);
     }
 
+    /**
+     * @param $channelId
+     * @param Thread $thread
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
     public function index ($channelId, Thread $thread)
     {
         return $thread->replies()->paginate(20);
@@ -24,7 +32,6 @@ class RepliesController extends Controller
      * @param Thread $thread
      * @param CreatePostRequest $form
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Http\RedirectResponse
-     * @internal param SpamManger $spam
      */
     public function store ($channelId, Thread $thread, CreatePostRequest $form)
     {
@@ -34,20 +41,22 @@ class RepliesController extends Controller
         ])->load('owner');
     }
 
+    /**
+     * @param Reply $reply
+     */
     public function update (Reply $reply)
     {
         $this->authorize('update', $reply);
 
-        try {
-            $this->validate(request(), [ 'body' => 'required|spamfree' ]);
+        $this->validate(request(), [ 'body' => 'required|spamfree' ]);
 
-            $reply->update(request([ 'body' ]));
-        } catch ( \Exception $e ) {
-            return response('Sorry, Your Reply Could Not Be Saved At This Time. ', 422);
-        }
-
+        $reply->update(request([ 'body' ]));
     }
 
+    /**
+     * @param Reply $reply
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function destroy (Reply $reply)
     {
         $this->authorize('update', $reply);

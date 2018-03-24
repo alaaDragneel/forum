@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 class ThreadsController extends Controller
 {
 
+    /**
+     * ThreadsController constructor.
+     */
     public function __construct ()
     {
         $this->middleware('auth')->except([ 'index', 'show' ]);
@@ -90,7 +93,6 @@ class ThreadsController extends Controller
      * @param $channel
      * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
-     * @internal param $channelId
      */
     public function show ($channel, Thread $thread)
     {

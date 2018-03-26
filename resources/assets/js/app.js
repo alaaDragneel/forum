@@ -8,7 +8,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-window.Vue.prototype.authorized = function (handler) {
+Vue.prototype.authorized = function (handler) {
     let user = window.App.user;
 
     return user ? handler(user) : false;
@@ -17,7 +17,7 @@ window.Vue.prototype.authorized = function (handler) {
 window.events = new Vue();
 
 window.flash = function (message, level = 'success') {
-    window.events.$emit('flash', { message, level });
+    window.events.$emit('flash', {message, level});
 };
 
 /**
@@ -29,6 +29,7 @@ window.flash = function (message, level = 'success') {
 Vue.component('flash', require('./components/Flash.vue'));
 Vue.component('paginator', require('./components/Paginator.vue'));
 Vue.component('user-notifications', require('./components/UserNotifications.vue'));
+Vue.component('avatar-form', require('./components/AvatarForm.vue'));
 
 // pages
 Vue.component('thread-view', require('./pages/Threads.vue'));

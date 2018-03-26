@@ -1,13 +1,19 @@
 @extends('layouts.app')
 
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/vendor/jquery.atwho.min.css') }}">
+@endsection
+
 @section('content')
-   <thread-view :initial-replies-count="{{ $thread->replies_count }}" inline-template>
+    <thread-view :initial-replies-count="{{ $thread->replies_count }}" inline-template>
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
                     {{-- Main Thread Section::start--}}
                     @component('profiles.activities.activity')
                         @slot('heading')
+
+                            <img src="{{ $thread->owner->avatar_path }}" class="mr-1" alt="{{ $thread->owner->name }}" title="{{ $thread->owner->name }}" width="25" height="25">
                             <a href="{{ route('profiles.show', ['profileUser' => $thread->owner]) }}">
                                 {{ $thread->owner->name }}
                             </a>
@@ -38,7 +44,7 @@
                                 This thread was published {{ $thread->created_at->diffForHumans() }}
                                 by
                                 <a href="{{ route('profiles.show', ['profileUser' => $thread->owner]) }}">{{ $thread->owner->name }}</a>,
-                                and currently has 
+                                and currently has
                                 <span v-text="repliesCount"></span> {{ str_plural('comment', $thread->replies_count) }}.
                             </p>
                             <p>
@@ -49,7 +55,7 @@
                 </div>
             </div>
         </div>
-   </thread-view>
+    </thread-view>
 @endsection
 
 @section('scripts')

@@ -19,14 +19,19 @@
                     </h5>
                 </div>
                 <span>
-                                     <a href="{{ $thread->path() }}">
-                                        {{ $thread->replies_count }} {{ str_plural('Reply', $thread->replies_count) }}
-                                     </a>
-                                </span>
+                     <a href="{{ $thread->path() }}">
+                        {{ $thread->replies_count }} {{ str_plural('Reply', $thread->replies_count) }}
+                     </a>
+                </span>
             </div>
         </div>
         <div class="panel-body">
             {{ $thread->body }}
+        </div>
+
+        <div class="panel-footer">
+            {{ $thread->visits()->count() }}
+            <span>Visits</span>
         </div>
     </div>
 @empty

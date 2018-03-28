@@ -4,9 +4,8 @@ namespace Tests\Feature;
 
 use App\Mail\PleaseConfirmYourEmail;
 use App\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Support\Facades\Mail;
+use Mail;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -17,10 +16,14 @@ class RegistrationTest extends TestCase
     /** @test */
     public function a_confirmation_email_is_sent_upon_registration ()
     {
-        // More Code Can Found In EventServiceProvider
         Mail::fake();
 
-        event(new Registered(create('App\User')));
+        $this->post(route('register'), [
+            'name'                  => 'alaa',
+            'email'                 => 'alaa@example.com',
+            'password'              => 'foobar',
+            'password_confirmation' => 'foobar',
+        ]);
 
         Mail::assertSent(PleaseConfirmYourEmail::class);
     }
@@ -28,7 +31,9 @@ class RegistrationTest extends TestCase
     /** @test */
     public function user_can_fully_confirm_their_email_addresses ()
     {
-        $this->post('/register', [
+        Mail::fake();
+
+        $this->post(route('register'), [
             'name'                  => 'alaa',
             'email'                 => 'alaa@example.com',
             'password'              => 'foobar',
@@ -43,11 +48,18 @@ class RegistrationTest extends TestCase
 
         // let the user confirm their account
 
-        $response = $this->get('/register/confirm?token=' . $user->confirmation_token);
+        $this->get(route('register.confirm', [ 'token' => $user->confirmation_token ]))
+            ->assertRedirect(route('threads.index'));
 
         $this->assertTrue($user->fresh()->confirmed);
-
-        $response->assertRedirect('/threads');
     }
 
+    /** @test */
+    public function cconfirming_an_invalid_token ()
+    {
+        $this->get(route('register.confirm', [ 'token' => 'invalid' ]))
+            ->assertRedirect(route('threads.index'))
+            ->assertSessionHas('flash', 'Unknown Token.');
+
+    }
 }

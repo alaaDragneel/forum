@@ -18,14 +18,20 @@ class CreateThreadTest extends TestCase
         $this->get('/threads/create')
             ->assertRedirect('/login');
 
-        $this->post('/threads')->assertRedirect('/login');
+        $this->post(route('threads.index'))->assertRedirect('/login');
     }
 
     /** @test */
-    public function authenticated_users_must_confirm_their_email_address_before_creating_threads ()
+    public function new_users_must_confirm_their_email_address_before_creating_threads ()
     {
-        $this->publishThread()
-            ->assertRedirect('/threads')
+        $user = factory('App\User')->states('unconfirmed')->create();
+
+        $this->withExceptionHandling()->signIn($user);
+
+        $thread = make('App\Thread');
+
+        return $this->post(route('threads.index'), $thread->toArray())
+            ->assertRedirect(route('threads.index'))
             ->assertSessionHas('flash', 'You Must Confirm Your Email Address');
     }
 
@@ -35,19 +41,19 @@ class CreateThreadTest extends TestCase
 
         $thread = make('App\Thread', $overrides);
 
-        return $this->post('/threads', $thread->toArray());
+        return $this->post(route('threads.index'), $thread->toArray());
 
     }
 
     /** @test */
-    public function an_authentecated_user_can_create_new_threads ()
+    public function a_user_can_create_new_threads ()
     {
         // Given we have a signed in user
         $this->signIn();
 
         // when we hit the endpoint to create a new thread
         $thread = make('App\Thread');
-        $response = $this->post('/threads', $thread->toArray());
+        $response = $this->post(route('threads.index'), $thread->toArray());
 
         // then when we visit the thread page
         $this->get($response->headers->get('Location'))

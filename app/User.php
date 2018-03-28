@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'avatar_path',
+        'name', 'email', 'password', 'avatar_path'
     ];
 
     /**
@@ -28,6 +28,9 @@ class User extends Authenticatable
         'password', 'remember_token', 'email',
     ];
 
+    protected $casts = [
+        'confirmed' => 'boolean'
+    ];
 
     /**
      * Get The Route key Name For Laravel
@@ -54,6 +57,14 @@ class User extends Authenticatable
         return $this->hasMany(Activity::class, 'user_id');
     }
 
+    public function confirmed ()
+    {
+        $this->confirmed = true;
+        $this->confirmation_token = null;
+        $this->save();
+    }
+
+
     public function read ($thread)
     {
         // Simulate that The User Visited The Thread
@@ -73,5 +84,5 @@ class User extends Authenticatable
         return asset($avatar ? 'storage/' . $avatar : 'images/avatar/profile.png');
     }
 
-
+    
 }

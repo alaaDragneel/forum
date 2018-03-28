@@ -21,6 +21,7 @@ $factory->define(App\User::class, function (Faker $faker)
         'email'          => $faker->unique()->safeEmail,
         'password'       => bcrypt('123456'),
         'remember_token' => str_random(10),
+        'confirmed'      => false,
     ];
 });
 
@@ -70,12 +71,13 @@ $factory->define(\Illuminate\Notifications\DatabaseNotification::class, function
 {
 
     return [
-        'id' =>  Uuid::uuid4()->toString(),
-        'type' => 'App\Notifications\ThreadWasUpdated',
-        'notifiable_id' => function () {
+        'id'              => Uuid::uuid4()->toString(),
+        'type'            => 'App\Notifications\ThreadWasUpdated',
+        'notifiable_id'   => function ()
+        {
             return auth()->id() ?: factory('App\User')->create()->id;
         },
         'notifiable_type' => 'App\User',
-        'data' => ['Foo' => 'Bar']
+        'data'            => [ 'Foo' => 'Bar' ],
     ];
 });

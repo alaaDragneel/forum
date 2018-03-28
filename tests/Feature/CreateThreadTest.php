@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Activity;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class CreateThreadTest extends TestCase
 {
@@ -19,6 +19,24 @@ class CreateThreadTest extends TestCase
             ->assertRedirect('/login');
 
         $this->post('/threads')->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function authenticated_users_must_confirm_their_email_address_before_creating_threads ()
+    {
+        $this->publishThread()
+            ->assertRedirect('/threads')
+            ->assertSessionHas('flash', 'You Must Confirm Your Email Address');
+    }
+
+    protected function publishThread ($overrides = [])
+    {
+        $this->withExceptionHandling()->signIn();
+
+        $thread = make('App\Thread', $overrides);
+
+        return $this->post('/threads', $thread->toArray());
+
     }
 
     /** @test */
@@ -38,9 +56,8 @@ class CreateThreadTest extends TestCase
             ->assertSee($thread->body);
     }
 
-
     /** @test */
-    public function unauthorized_users_cannot_delete_threads()
+    public function unauthorized_users_cannot_delete_threads ()
     {
         // NOTE: Not Signed In
         $this->withExceptionHandling();
@@ -54,21 +71,21 @@ class CreateThreadTest extends TestCase
     }
 
     /** @test */
-    public function authorized_users_can_delete_threads()
+    public function authorized_users_can_delete_threads ()
     {
-        // TODO: NOTE Error With Sqlite error code 25 index columns excited run it with mysql and will work the error from php and sqlite
         $this->signIn();
 
 
-        $thread = create('App\Thread', ['user_id' => auth()->id()]);
+        $thread = create('App\Thread', [ 'user_id' => auth()->id() ]);
         $reply = create('App\Reply', [ 'thread_id' => $thread->id ]);
         $response = $this->json('DELETE', $thread->path());
 
         $response->assertStatus(204);
 
         $this->assertDatabaseMissing('threads', [ 'id' => $thread->id ]);
-//         $this->assertDatabaseMissing('replies', [ 'id' => $reply->id ]); // Leave it before testing error with the sqlite3
-//        $this->assertEquals(0, Activity::count()); // uncomment when uncomment the reply
+        $this->assertDatabaseMissing('replies', [ 'id' => $reply->id ]); // Leave it before testing error with the sqlite3
+        $this->assertEquals(0, Activity::count()); // uncomment when uncomment the reply
 
     }
+
 }

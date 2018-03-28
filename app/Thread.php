@@ -25,10 +25,7 @@ class Thread extends Model
 
         static::deleting(function ($thread)
         {
-            // TODO: NOTE Error With Sqlite error code 25 index columns excited run it with mysql and will work the error from php and sqlite
-            if ( app()->environment() !== 'testing' ) {
-                $thread->replies->each->delete();
-            }
+            $thread->replies->each->delete();
             /*
              * the line above equal the next line
                 $thread->replies->each(function ($reply) {

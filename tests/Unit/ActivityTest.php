@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Activity;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ActivityTest extends TestCase
 {
@@ -33,8 +33,8 @@ class ActivityTest extends TestCase
     {
         $this->signIn();
         create('App\Reply');
-
-        $this->assertEquals(2, Activity::count());
+        
+        $this->assertEquals(3, Activity::count());
     }
 
     /** @test */

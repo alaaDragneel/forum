@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Activity;
-use App\Thread;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -72,17 +71,13 @@ class CreateThreadTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create('App\Thread', [ 'title' => 'Foo Title', 'slug' => 'foo-title' ]);
+        $thread = create('App\Thread', [ 'title' => 'Foo Title' ]);
 
         $this->assertEquals($thread->fresh()->slug, 'foo-title');
 
-        $this->post(route('threads.store'), $thread->toArray());
+        $thread = $this->postJson(route('threads.store'), $thread->toArray())->json();
 
-        $this->assertTrue(Thread::where('slug', 'foo-title-2')->exists());
-
-        $this->post(route('threads.store'), $thread->toArray());
-
-        $this->assertTrue(Thread::where('slug', 'foo-title-3')->exists());
+        $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
     }
 
     /** @test */
@@ -90,11 +85,11 @@ class CreateThreadTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create('App\Thread', [ 'title' => 'Some Title 24', 'slug' => 'some-title-24' ]);
+        $thread = create('App\Thread', [ 'title' => 'Some Title 24' ]);
 
-        $this->post(route('threads.store'), $thread->toArray());
+        $thread = $this->postJson(route('threads.store'), $thread->toArray())->json();
 
-        $this->assertTrue(Thread::where('slug', 'foo-title-24-2')->exists());
+        $this->assertEquals("some-title-24-{$thread['id']}", $thread['slug']);
 
     }
 

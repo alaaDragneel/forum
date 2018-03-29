@@ -6,15 +6,18 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateThreadsTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
+    public function up ()
     {
-        Schema::create('threads', function (Blueprint $table) {
+        Schema::create('threads', function (Blueprint $table)
+        {
             $table->increments('id');
+            $table->string('slug')->unique();
             $table->string('title');
             $table->text('body');
             $table->unsignedInteger('user_id');
@@ -29,7 +32,7 @@ class CreateThreadsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down ()
     {
         Schema::dropIfExists('threads');
     }

@@ -42,6 +42,10 @@
         [v-cloak] {
             display: none;
         }
+
+        .ml-a {
+            margin-left: auto;
+        }
     </style>
 
     @yield('styles')

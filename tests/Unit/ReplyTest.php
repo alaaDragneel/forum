@@ -9,10 +9,11 @@ use Tests\TestCase;
 
 class ReplyTest extends TestCase
 {
+
     use DatabaseMigrations;
-    
+
     /** @test */
-    public function it_has_an_owner()
+    public function it_has_an_owner ()
     {
         $reply = create('App\Reply');
 
@@ -54,4 +55,15 @@ class ReplyTest extends TestCase
         );
     }
 
+    /** @test */
+    public function it_knows_if_it_is_the_best_reply ()
+    {
+        $reply = create('App\Reply');
+
+        $this->assertFalse($reply->isBest());
+
+        $reply->thread->update([ 'best_reply_id' => $reply->id ]);
+
+        $this->assertTrue($reply->fresh()->isBest());
+    }
 }

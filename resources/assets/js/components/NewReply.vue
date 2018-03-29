@@ -37,9 +37,6 @@
             };
         },
         computed: {
-            signedIn() {
-                return window.App.signedIn;
-            },
             state() {
                 return this.disabled ? 'Loading ...' : 'Post';
             }

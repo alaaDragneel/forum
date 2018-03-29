@@ -146,6 +146,4 @@ class Thread extends Model
     {
         $this->update([ 'best_reply_id' => $reply->id ]);
     }
-
-
 }

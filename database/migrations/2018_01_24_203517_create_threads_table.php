@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateThreadsTable extends Migration
 {
@@ -25,6 +25,11 @@ class CreateThreadsTable extends Migration
             $table->unsignedInteger('replies_count')->default(0);
             $table->unsignedInteger('best_reply_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('best_reply_id')
+                ->references('id')
+                ->on('replies')
+                ->onDelete('set null');
         });
     }
 

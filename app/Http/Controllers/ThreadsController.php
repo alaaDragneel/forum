@@ -131,12 +131,13 @@ class ThreadsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
+     * @param $channel
      * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function update (Request $request, Thread $thread)
+    public function update ($channel, Thread $thread)
     {
-        //
+
     }
 
     /**

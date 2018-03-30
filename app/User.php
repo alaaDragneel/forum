@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'avatar_path'
+        'name', 'email', 'password', 'avatar_path',
     ];
 
     /**
@@ -29,7 +29,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'confirmed' => 'boolean'
+        'confirmed' => 'boolean',
     ];
 
     /**
@@ -64,6 +64,11 @@ class User extends Authenticatable
         $this->save();
     }
 
+    public function isAdmin ()
+    {
+        return $this->type === 'admin';
+    }
+
 
     public function read ($thread)
     {
@@ -84,5 +89,5 @@ class User extends Authenticatable
         return asset($avatar ? 'storage/' . $avatar : 'images/avatar/profile.png');
     }
 
-    
+
 }

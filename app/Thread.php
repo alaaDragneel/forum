@@ -4,11 +4,12 @@ namespace App;
 
 use App\Events\ThreadReceivedNewReply;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Thread extends Model
 {
 
-    use RecordsActivity;
+    use RecordsActivity, Searchable;
 
     protected $guarded = [];
     protected $with = [ 'owner', 'channel' ];
@@ -75,7 +76,7 @@ class Thread extends Model
 
         return $newReply;
     }
-    
+
     public function replies ()
     {
         return $this->hasMany(Reply::class, 'thread_id');

@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ProfileTest extends TestCase
 {
 
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_user_has_a_profile ()
@@ -23,7 +23,7 @@ class ProfileTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create('App\Thread', ['user_id' => auth()->id()]);
+        $thread = create('App\Thread', [ 'user_id' => auth()->id() ]);
         $this->get('/profiles/' . auth()->user()->name)
             ->assertSee($thread->title)
             ->assertSee($thread->body);

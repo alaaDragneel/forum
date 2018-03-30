@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Channel;
 use App\Filters\ThreadFilters;
+use App\Rules\Recaptcha;
 use App\Thread;
 use App\Trending;
-use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
 {
@@ -69,17 +69,17 @@ class ThreadsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Recaptcha $recaptcha
      * @return \Illuminate\Http\Response
      */
-    public function store (Request $request)
+    public function store (Recaptcha $recaptcha)
     {
-        $this->validate($request, [
-            'title'      => 'required|spamfree',
-            'body'       => 'required|spamfree',
-            'channel_id' => 'required|exists:channels,id',
+        request()->validate([
+            'title'                => 'required|spamfree',
+            'body'                 => 'required|spamfree',
+            'channel_id'           => 'required|exists:channels,id',
+            'g-recaptcha-response' => [ 'required', $recaptcha ],
         ]);
-
 
         $thread = Thread::create([
             'title'      => request('title'),
@@ -133,10 +133,20 @@ class ThreadsController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @param $channel
      * @param  \App\Thread $thread
-     * @return \Illuminate\Http\Response
+     * @return Thread
      */
     public function update ($channel, Thread $thread)
     {
+        $this->authorize('update', $thread);
+
+        $validateData = request()->validate([
+            'title' => 'required|spamfree',
+            'body'  => 'required|spamfree',
+        ]);
+
+        $thread->update($validateData);
+
+        return $thread;
 
     }
 

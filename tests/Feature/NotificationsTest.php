@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\DatabaseNotification;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class NotificationsTest extends TestCase
 {
 
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected function setUp ()
     {
@@ -64,7 +64,8 @@ class NotificationsTest extends TestCase
     {
         create(DatabaseNotification::class);
 
-        tap(auth()->user(), function ($user) {
+        tap(auth()->user(), function ($user)
+        {
             // A Notification Should Be Prepared For The User.
             $this->assertCount(1, $user->fresh()->unreadNotifications);
 

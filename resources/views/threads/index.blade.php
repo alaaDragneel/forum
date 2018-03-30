@@ -10,6 +10,23 @@
             </div>
 
             <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Search
+                    </div>
+                    <div class="panel-body">
+                        <form action="{{ route('threads.search') }}">
+                            <div class="form-group">
+                                <input type="text" name="q" class="form-control" placeholder="Search For Somthing...">
+                            </div>
+
+                            <div class="form-group">
+                                <button class="btn btn-success btn-block" type="submit">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 @if(count($trending))
                     <div class="panel panel-default">
                         <div class="panel-heading">

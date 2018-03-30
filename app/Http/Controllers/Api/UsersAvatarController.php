@@ -8,6 +8,10 @@ use App\User;
 class UsersAvatarController extends Controller
 {
 
+    /**
+     * @param $user
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function store ($user)
     {
         $user = User::findOrFail($user);

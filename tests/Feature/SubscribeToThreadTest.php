@@ -2,18 +2,19 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class SubscribeToThreadTest extends TestCase
 {
-    use DatabaseMigrations;
-    
+
+    use RefreshDatabase;
+
     /** @test */
-    public function a_user_can_subscribe_to_threads() 
+    public function a_user_can_subscribe_to_threads ()
     {
         $this->signIn();
-     
+
         // Given We Have A Thread ...
         $thread = create('App\Thread');
 
@@ -24,7 +25,7 @@ class SubscribeToThreadTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_unsubscribe_from_threads()
+    public function a_user_can_unsubscribe_from_threads ()
     {
         $this->signIn();
 

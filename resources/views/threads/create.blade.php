@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('styles')
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+@endsection
+
 @section('content')
     <div class="container">
         <div class="row">
@@ -37,6 +41,11 @@
                                 <textarea id="body" name="body" class="form-control body" rows="8" placeholder="Body Here" required>{{ old('body') }}</textarea>
                             </div>
                             {{-- Body Section::End--}}
+
+                            {{-- reCAPTCHA Section::Start--}}
+                            <div class="g-recaptcha" data-sitekey="6Lf6_E8UAAAAAETubBZcI7el9R5RuaGl5pm-3xZe"></div>
+                            {{-- reCAPTCHA Section::End--}}
+
                             <div class="form-group">
                                 <button class="btn btn-success">Publish</button>
                             </div>

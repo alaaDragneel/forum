@@ -9,32 +9,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    {{-- Main Thread Section::start--}}
-                    @component('profiles.activities.activity')
-                        @slot('heading')
-
-                            <img src="{{ $thread->owner->avatar_path }}" class="mr-1" alt="{{ $thread->owner->name }}" title="{{ $thread->owner->name }}" width="25" height="25">
-                            <a href="{{ route('profiles.show', ['profileUser' => $thread->owner]) }}">
-                                {{ $thread->owner->name }}
-                            </a>
-                            Posted:
-                            {{ $thread->title }}
-                        @endslot
-                        @slot('option')
-                            @can('update', $thread)
-                                <form action="{{ $thread->path() }}" method="POST">
-                                    {{ csrf_field() }}
-                                    {{ method_field('DELETE') }}
-                                    <button type="submit" class="btn btn-link btn-sm">Delete Thread</button>
-                                </form>
-                            @endcan
-                        @endslot
-                        @slot('body')
-                            {{ $thread->body }}
-                        @endslot
-                    @endcomponent
-                    {{-- Main Thread Section::end--}}
-
+                    @include('threads._questions')
                     <replies @added="repliesCount++" @removed="repliesCount--"></replies>
                 </div>
                 <div class="col-md-4">

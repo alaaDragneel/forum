@@ -2,12 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class FavoriteTest extends TestCase
 {
-    use DatabaseMigrations;
+
+    use RefreshDatabase;
 
     /** @test */
     public function guests_cannot_favorite_any_things ()
@@ -16,8 +17,9 @@ class FavoriteTest extends TestCase
         $this->post('replies/1/favorites')->assertRedirect('/login');
 
     }
+
     /** @test */
-    public function an_authinticated_user_can_favorite_any_reply()
+    public function an_authinticated_user_can_favorite_any_reply ()
     {
         $this->signIn();
         $reply = create('App\Reply');
@@ -27,11 +29,11 @@ class FavoriteTest extends TestCase
     }
 
     /** @test */
-    public function an_authinticated_user_can_unfavorite_reply()
+    public function an_authinticated_user_can_unfavorite_reply ()
     {
         $this->signIn();
         $reply = create('App\Reply');
-        
+
         $reply->favorite();
 
         $this->delete('replies/' . $reply->id . '/favorites');
@@ -48,7 +50,7 @@ class FavoriteTest extends TestCase
         try {
             $this->post('replies/' . $reply->id . '/favorites');
             $this->post('replies/' . $reply->id . '/favorites');
-        } catch (\Exception $e) {
+        } catch ( \Exception $e ) {
             $this->fail('Did Not Expect To Insert The Same Record set Twice');
         }
         $this->assertCount(1, $reply->favorites);

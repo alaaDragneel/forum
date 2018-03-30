@@ -15,7 +15,7 @@
 
     <!-- Scripts -->
     <script>
-        window.App = {!! json_encode([
+		window.App = {!! json_encode([
             'user' => auth()->user(),
             'signedIn' => auth()->check()
         ]) !!};
@@ -29,6 +29,10 @@
         .level {
             display: flex;
             align-items: center;
+        }
+
+        .level-item {
+            margin-right: 1em;
         }
 
         .flex {

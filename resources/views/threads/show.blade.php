@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <thread-view :initial-replies-count="{{ $thread->replies_count }}" inline-template>
+    <thread-view :thread="{{ $thread }}" inline-template v-cloak>
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
@@ -48,7 +48,14 @@
                                 <span v-text="repliesCount"></span> {{ str_plural('comment', $thread->replies_count) }}.
                             </p>
                             <p>
-                                <subscribe-button :active="'{{ $thread->isSubscribedTo }}'"></subscribe-button>
+                                <subscribe-button :active="'{{ $thread->isSubscribedTo }}'" v-if="signedIn"></subscribe-button>
+                                <button
+                                        class="btn btn-primary"
+                                        v-if="authorize('isAdmin')"
+                                        @click="toggleLock"
+                                        v-text="locked ? 'Unlock' : 'Lock'">
+                                    Lock
+                                </button>
                             </p>
                         </div>
                     </div>
@@ -60,12 +67,12 @@
 
 @section('scripts')
     <script>
-        $(document).ready(function () {
-            // highlight the selected favorite
-            if (window.location.hash != '') {
-                var hash = window.location.hash.replace(/#/g, '');
-                $('#' + hash).toggleClass('panel-success');
-            }
-        });
+		$(document).ready(function () {
+			// highlight the selected favorite
+			if (window.location.hash != '') {
+				var hash = window.location.hash.replace(/#/g, '');
+				$('#' + hash).toggleClass('panel-success');
+			}
+		});
     </script>
 @endsection

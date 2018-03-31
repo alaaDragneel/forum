@@ -154,5 +154,13 @@ class ThreadTest extends TestCase
         $thread->visits()->record();
         $this->assertEquals(2, $thread->visits()->count());
     }
+
+    /** @test */
+    public function a_threads_body_is_sanitized_automatically ()
+    {
+        $thread = make('App\Thread', [ 'body' => '<script>alert("bad")</script><h1>This Is Ok</h1>' ]);
+
+        $this->assertEquals('<h1>This Is Ok</h1>', $thread->body);
+    }
 }
 

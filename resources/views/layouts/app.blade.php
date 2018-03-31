@@ -12,7 +12,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
+    <link href="{{ asset('css/vendor/trix.css') }}" rel="stylesheet">
     <!-- Scripts -->
     <script>
 		window.App = {!! json_encode([

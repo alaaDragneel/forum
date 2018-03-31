@@ -4,12 +4,11 @@ namespace App;
 
 use App\Events\ThreadReceivedNewReply;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 
 class Thread extends Model
 {
 
-    use RecordsActivity, Searchable;
+    use RecordsActivity;
 
     protected $guarded = [];
     protected $with = [ 'owner', 'channel' ];
@@ -148,4 +147,10 @@ class Thread extends Model
     {
         $this->update([ 'best_reply_id' => $reply->id ]);
     }
+
+    public function getBodyAttribute ($body)
+    {
+        return \Purify::clean($body);
+    }
+
 }

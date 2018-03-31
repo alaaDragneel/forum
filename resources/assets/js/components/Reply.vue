@@ -20,7 +20,8 @@
             <div v-if="editing">
                 <form @submit.prevent="update">
                     <div class="form-group">
-                        <textarea class="form-control" v-model="body" required></textarea>
+                        <wysiwyg name="body" v-model="body"></wysiwyg>
+
                     </div>
                     <button class="btn btn-primary btn-xs">Update</button>
                     <button class="btn btn-link btn-xs" @click="editing = false" type="button">Cancel</button>
@@ -44,56 +45,56 @@
 </template>
 
 <script>
-    import Favorite from './Favorite.vue';
-    import moment from 'moment';
+	import Favorite from './Favorite.vue';
+	import moment from 'moment';
 
-    export default {
-        props: ['reply'],
-        components: {Favorite},
-        data() {
-            return {
-                editing: false,
-                id: this.reply.id,
-                body: this.reply.body,
-                isBest: this.reply.isBest,
-            };
-        },
-        computed: {
-            ago() {
-                return moment(this.reply.created_at).fromNow() + ' ...';
-            }
-        },
+	export default {
+		props: [ 'reply' ],
+		components: { Favorite },
+		data () {
+			return {
+				editing: false,
+				id: this.reply.id,
+				body: this.reply.body,
+				isBest: this.reply.isBest,
+			};
+		},
+		computed: {
+			ago () {
+				return moment(this.reply.created_at).fromNow() + ' ...';
+			}
+		},
 
-        created() {
-            window.events.$on('best-reply-selected', id => {
-                this.isBest = (id === this.id);
-            });
-        },
+		created () {
+			window.events.$on('best-reply-selected', id => {
+				this.isBest = (id === this.id);
+			});
+		},
 
-        methods: {
-            update() {
-                axios.patch('/replies/' + this.id, {
-                    body: this.body
-                })
-                    .then(response => {
-                        this.editing = false;
-                        flash('Reply Updated!');
-                    })
-                    .catch(error => {
-                        flash(error.response.data, 'danger');
+		methods: {
+			update () {
+				axios.patch('/replies/' + this.id, {
+					body: this.body
+				})
+				.then(response => {
+					this.editing = false;
+					flash('Reply Updated!');
+				})
+				.catch(error => {
+					flash(error.response.data, 'danger');
 
-                    });
-            },
-            destroy() {
-                axios.delete('/replies/' + this.id);
+				});
+			},
+			destroy () {
+				axios.delete('/replies/' + this.id);
 
-                this.$emit('reply-deleted', this.id);
-            },
-            markBestReply() {
-                axios.post('/replies/' + this.id + '/best');
+				this.$emit('reply-deleted', this.id);
+			},
+			markBestReply () {
+				axios.post('/replies/' + this.id + '/best');
 
-                window.events.$emit('best-reply-selected', this.id);
-            }
-        }
-    };
+				window.events.$emit('best-reply-selected', this.id);
+			}
+		}
+	};
 </script>

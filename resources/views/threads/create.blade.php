@@ -38,7 +38,7 @@
                             {{-- Body Section::Start --}}
                             <div class="form-group">
                                 <label for="body">Body</label>
-                                <textarea id="body" name="body" class="form-control body" rows="8" placeholder="Body Here" required>{{ old('body') }}</textarea>
+                                <wysiwyg name="body"></wysiwyg>
                             </div>
                             {{-- Body Section::End--}}
 

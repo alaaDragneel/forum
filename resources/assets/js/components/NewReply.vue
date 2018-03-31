@@ -2,14 +2,7 @@
     <div>
         <div v-if="signedIn">
             <div class="form-group">
-                    <textarea
-                            name="body"
-                            id="body"
-                            class="form-control"
-                            placeholder="Have Something To Say ?"
-                            rows="5"
-                            required
-                            v-model="body"></textarea>
+                <textarea name="body" v-model="body" placeholder="Have Something To Say ?" id="body" class="form-control" rows="5"></textarea>
             </div>
             <button class="btn btn-success" @click="addReply" :disabled="disabled" v-text="state">Post</button>
         </div>
@@ -25,50 +18,50 @@
 </template>
 
 <script>
-    import 'at.js';
-    import 'jquery.caret';
+	import 'at.js';
+	import 'jquery.caret';
 
-    export default {
-        data() {
-            return {
-                body: '',
-                disabled: false,
-                endpoint: location.pathname + "/replies"
-            };
-        },
-        computed: {
-            state() {
-                return this.disabled ? 'Loading ...' : 'Post';
-            }
-        },
-        mounted() {
-            $('#body').atwho({
-                at: '@',
-                delay: 750,
-                callbacks: {
-                    remoteFilter(query, callback) {
-                        $.getJSON('/api/users', {name: query}, usernames => {
-                            callback(usernames);
-                        });
-                    }
-                }
-            });
-        },
-        methods: {
-            addReply() {
-                this.disabled = true;
-                axios.post(this.endpoint, {body: this.body})
-                    .then(({data}) => {
-                        this.disabled = false;
-                        this.body = '';
-                        flash('Your Reply Has Been Left!');
-                        this.$emit('reply-created', data);
-                    })
-                    .catch(error => {
-                        this.disabled = false;
-                        flash(error.response.data, 'danger');
-                    });
-            },
-        }
-    };
+	export default {
+		data () {
+			return {
+				body: '',
+				disabled: false,
+				endpoint: location.pathname + "/replies"
+			};
+		},
+		computed: {
+			state () {
+				return this.disabled ? 'Loading ...' : 'Post';
+			}
+		},
+		mounted () {
+			$('#body').atwho({
+				at: '@',
+				delay: 750,
+				callbacks: {
+					remoteFilter (query, callback) {
+						$.getJSON('/api/users', { name: query }, usernames => {
+							callback(usernames);
+						});
+					}
+				}
+			});
+		},
+		methods: {
+			addReply () {
+				this.disabled = true;
+				axios.post(this.endpoint, { body: this.body })
+				.then(({ data }) => {
+					this.disabled = false;
+					this.body = '';
+					flash('Your Reply Has Been Left!');
+					this.$emit('reply-created', data);
+				})
+				.catch(error => {
+					this.disabled = false;
+					flash(error.response.data, 'danger');
+				});
+			},
+		}
+	};
 </script>

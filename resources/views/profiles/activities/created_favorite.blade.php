@@ -9,6 +9,6 @@
         {{ $activity->subject->favorited->created_at->diffForHumans() }}
     @endslot
     @slot('body')
-        {{ $activity->subject->favorited->body }}
+        {!! $activity->subject->favorited->body !!}
     @endslot
 @endcomponent

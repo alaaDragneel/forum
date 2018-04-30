@@ -33,7 +33,7 @@
         },
         computed: {
             canUpdate() {
-                return this.authorized(user => user.id === this.user.id)
+                return this.authorize(user => user.id === this.user.id)
             },
             ago() {
                 return moment(this.user.created_at).fromNow();
